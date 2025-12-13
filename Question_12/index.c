@@ -1,19 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-void reverseLinkedList(struct Node** head) {
-    struct Node* prev = NULL;
-    struct Node* current = *head;
-    struct Node* next = NULL;
 
-    while (current != NULL) {
-        next = current->next; 
-        current->next = prev; 
-        prev = current;       
-        current = next;
+bool isCyclic(struct Node* head){
+    struct Node* slow = head;
+    struct Node* fast = head;
+    while(fast != NULL && fast->next != NULL){
+        slow = slow->next;
+        fast = fast->next->next;
+        if(slow == fast){
+            return true;
+        }
+
     }
-    *head = prev;
+    return false;
+
 }
+
+
 struct Node {
     int data;
     struct Node* next;
@@ -55,7 +60,7 @@ int main() {
     insert(&head, 20);
     insert(&head, 30);
     insert(&head, 40);
-
+    printf("Is Cyclic: %s\n", isCyclic(head) ? "Yes" : "No");
     printf("Linked List: ");
     printList(head);
 
