@@ -1,14 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct Node* deleteByValue(struct Node* head , int value){
-    struct Node* current = head;
-    struct Node* previous = NULL;
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+Node* deleteByValue(Node* head, int value) {
+    Node* current = head;
+    Node* previous = NULL;
 
     while (current != NULL) {
         if (current->data == value) {
             if (previous == NULL) {
-                struct Node* temp = head;
+                Node* temp = head;
                 head = head->next;
                 free(temp);
             } else {
@@ -23,13 +28,8 @@ struct Node* deleteByValue(struct Node* head , int value){
     return head;
 }
 
-struct Node {
-    int data;
-    struct Node* next;
-};
-
-void insert(struct Node** head, int value) {
-    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+void insert(Node** head, int value) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->data = value;
     newNode->next = NULL;
 
@@ -38,7 +38,7 @@ void insert(struct Node** head, int value) {
         return;
     }
 
-    struct Node* temp = *head;
+    Node* temp = *head;
     while (temp->next != NULL) {
         temp = temp->next;
     }
@@ -46,9 +46,8 @@ void insert(struct Node** head, int value) {
     temp->next = newNode;
 }
 
-
-void printList(struct Node* head) {
-    struct Node* temp = head;
+void printList(Node* head) {
+    Node* temp = head;
     while (temp != NULL) {
         printf("%d -> ", temp->data);
         temp = temp->next;
@@ -56,31 +55,46 @@ void printList(struct Node* head) {
     printf("NULL\n");
 }
 
+Node* mergeSortedLists(Node* h1, Node* h2) {
+    if (!h1) return h2;
+    if (!h2) return h1;
+
+    Node* result = NULL;
+
+    if (h1->data <= h2->data) {
+        result = h1;
+        result->next = mergeSortedLists(h1->next, h2);
+    } else {
+        result = h2;
+        result->next = mergeSortedLists(h1, h2->next);
+    }
+
+    return result;
+}
 
 int main() {
-    struct Node* head1 = NULL;
+    Node* head1 = NULL;
 
     insert(&head1, 10);
     insert(&head1, 20);
     insert(&head1, 30);
     insert(&head1, 40);
-    
-    struct Node* head2 = NULL;
+
+    Node* head2 = NULL;
 
     insert(&head2, 50);
     insert(&head2, 60);
     insert(&head2, 70);
     insert(&head2, 80);
-    
 
-    
-    printf("Linked List:1 ");
+    printf("Linked List 1: ");
     printList(head1);
 
-    printf("Linked List:2 ");
+    printf("Linked List 2: ");
     printList(head2);
 
-    struct Node* mergedHead = mergeSortedLists(head1, head2);
+    Node* mergedHead = mergeSortedLists(head1, head2);
+
     printf("Merged Linked List: ");
     printList(mergedHead);
 
